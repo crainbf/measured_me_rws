@@ -114,16 +114,140 @@ summary(mm$Date)
 
 Great. Looks like we're ready to get started.
 
-
-## Exploratory Visualisations
+##ggplot2
 The excellent [GGplot2 library](http://docs.ggplot2.org/current/) implements the [Grammar of Graphics](http://www.springer.com/statistics/computational+statistics/book/978-0-387-24544-7).
-
-Note the pause between charts is intended for interactive use.
 
 
 ```r
 library(ggplot2)
+```
 
+
+Here is a basic example of a plot created by ggplot:
+
+
+```r
+ggplot(data = mm, aes(x = Date, y = Health)) + geom_point()
+```
+
+![plot of chunk unnamed-chunk-8](figure/unnamed-chunk-8.png) 
+
+We need to point out a few important things here:
+1. ggplot requires that the data comes as a data frame. That's the first variable we give the function.
+2. aes stands for aesthetics. It 'maps' the variables to different parts of the plot. Here we are saying we want the data on the x-axis and Health on the y-axis. 
+3. We then tell ggplot how we want that relationship to be expressed graphically. Here we are just showing the data points. 
+
+Let's try another type of plot.
+
+```r
+ggplot(data = mm, aes(x = Date, y = Health)) + geom_line()
+```
+
+![plot of chunk unnamed-chunk-9](figure/unnamed-chunk-9.png) 
+
+
+That's a line plot. Point and line plots are two of the most important. It's still hard to make sense of the data though...
+
+
+```r
+ggplot(data = mm, aes(x = Date, y = Health)) + geom_smooth()
+```
+
+![plot of chunk unnamed-chunk-10](figure/unnamed-chunk-10.png) 
+
+Now, this is interesting! Now ggplot creates some kind of smoothing regression. It looks a lot like Konstatin's health improved over the course of last summer. 
+
+We can also add several types of graphs. That's easy.
+
+
+```r
+ggplot(data = mm, aes(x = Date, y = Health)) + geom_point() + geom_smooth()
+```
+
+![plot of chunk unnamed-chunk-11](figure/unnamed-chunk-11.png) 
+
+
+There is an outlier in late June. Let's adjust the y-axis a bit. 
+
+
+```r
+library(scales)
+ggplot(data = mm, aes(x = Date, y = Health)) + geom_point() + geom_smooth() + 
+    scale_y_continuous(limits = c(3, 5))
+```
+
+![plot of chunk unnamed-chunk-12](figure/unnamed-chunk-12.png) 
+
+
+Let's play a little bit more with ggplot here. We can make very big points and draw the line in red.
+
+```r
+ggplot(data = mm, aes(x = Date, y = Health)) + geom_point(size = 4) + geom_smooth(col = "red", 
+    size = 3)
+```
+
+![plot of chunk unnamed-chunk-13](figure/unnamed-chunk-13.png) 
+
+
+Let's roll this back and try something different. There is a cool library with different graphics 'themes'. You can check out different examples on github: https://github.com/jrnold/ggthemes
+We can try out a few. Here's one inspired by Edward Tufte.
+
+```r
+library(ggthemes)
+ggplot(data = mm, aes(x = Date, y = Health)) + geom_point() + geom_smooth() + 
+    theme_tufte()
+```
+
+![plot of chunk unnamed-chunk-14](figure/unnamed-chunk-14.png) 
+
+
+Here is one called solarized.
+
+```r
+ggplot(data = mm, aes(x = Date, y = Health)) + geom_point() + geom_smooth() + 
+    theme_solarized()
+```
+
+![plot of chunk unnamed-chunk-15](figure/unnamed-chunk-15.png) 
+
+
+A classic ugly one inspired by excel.
+
+```r
+ggplot(data = mm, aes(x = Date, y = Health)) + geom_point() + geom_smooth() + 
+    theme_excel()
+```
+
+![plot of chunk unnamed-chunk-16](figure/unnamed-chunk-16.png) 
+
+
+Here is one inspired by the Economist.
+
+```r
+ggplot(data = mm, aes(x = Date, y = Health)) + geom_point() + geom_smooth() + 
+    theme_economist()
+```
+
+![plot of chunk unnamed-chunk-17](figure/unnamed-chunk-17.png) 
+
+
+Let's add a title to this graph. As you can see the cool thing with ggplot is that you can just add additional things to the graph without having to change the previous work.
+
+```r
+ggplot(data = mm, aes(x = Date, y = Health)) + geom_point() + geom_smooth() + 
+    theme_economist() + ggtitle("Konstantin's Health")
+```
+
+![plot of chunk unnamed-chunk-18](figure/unnamed-chunk-18.png) 
+
+
+But before we continue making nice graphs, let's take a step back and look at the data more systematically!
+
+## Exploratory Visualisations
+We can have a look at all the variable trends over the duration of the data.
+
+
+```r
 for (var in colnames(mm)[2:ncol(mm)]) {
     print(qplot(Date, mm[, var], data = mm, geom = "path", ylab = var))
     key <- readline("Press <return> for next plot")
@@ -133,91 +257,91 @@ for (var in colnames(mm)[2:ncol(mm)]) {
 }
 ```
 
-![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-71.png) 
+![plot of chunk unnamed-chunk-19](figure/unnamed-chunk-191.png) 
 
 ```
 ## Press <return> for next plot
 ```
 
-![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-72.png) 
+![plot of chunk unnamed-chunk-19](figure/unnamed-chunk-192.png) 
 
 ```
 ## Press <return> for next plot
 ```
 
-![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-73.png) 
+![plot of chunk unnamed-chunk-19](figure/unnamed-chunk-193.png) 
 
 ```
 ## Press <return> for next plot
 ```
 
-![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-74.png) 
+![plot of chunk unnamed-chunk-19](figure/unnamed-chunk-194.png) 
 
 ```
 ## Press <return> for next plot
 ```
 
-![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-75.png) 
+![plot of chunk unnamed-chunk-19](figure/unnamed-chunk-195.png) 
 
 ```
 ## Press <return> for next plot
 ```
 
-![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-76.png) 
+![plot of chunk unnamed-chunk-19](figure/unnamed-chunk-196.png) 
 
 ```
 ## Press <return> for next plot
 ```
 
-![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-77.png) 
+![plot of chunk unnamed-chunk-19](figure/unnamed-chunk-197.png) 
 
 ```
 ## Press <return> for next plot
 ```
 
-![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-78.png) 
+![plot of chunk unnamed-chunk-19](figure/unnamed-chunk-198.png) 
 
 ```
 ## Press <return> for next plot
 ```
 
-![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-79.png) 
+![plot of chunk unnamed-chunk-19](figure/unnamed-chunk-199.png) 
 
 ```
 ## Press <return> for next plot
 ```
 
-![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-710.png) 
+![plot of chunk unnamed-chunk-19](figure/unnamed-chunk-1910.png) 
 
 ```
 ## Press <return> for next plot
 ```
 
-![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-711.png) 
+![plot of chunk unnamed-chunk-19](figure/unnamed-chunk-1911.png) 
 
 ```
 ## Press <return> for next plot
 ```
 
-![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-712.png) 
+![plot of chunk unnamed-chunk-19](figure/unnamed-chunk-1912.png) 
 
 ```
 ## Press <return> for next plot
 ```
 
-![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-713.png) 
+![plot of chunk unnamed-chunk-19](figure/unnamed-chunk-1913.png) 
 
 ```
 ## Press <return> for next plot
 ```
 
-![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-714.png) 
+![plot of chunk unnamed-chunk-19](figure/unnamed-chunk-1914.png) 
 
 ```
 ## Press <return> for next plot
 ```
 
-![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-715.png) 
+![plot of chunk unnamed-chunk-19](figure/unnamed-chunk-1915.png) 
 
 ```
 ## Press <return> for next plot
@@ -249,8 +373,26 @@ ggplot(mm.melted, aes(Date, value)) + geom_path(na.rm = T) + geom_smooth(method 
     na.rm = T) + facet_wrap(~variable, ncol = 1, scales = "free_y")
 ```
 
-![plot of chunk unnamed-chunk-9](figure/unnamed-chunk-9.png) 
+![plot of chunk unnamed-chunk-21](figure/unnamed-chunk-21.png) 
 
+
+Let's redo these graphs but without the path. Just the smooth regression line. Perhaps we'll see more then. (We just get rid of the geom_path for that.)
+
+```r
+ggplot(mm.melted, aes(Date, value)) + geom_smooth(method = "loess", na.rm = T) + 
+    facet_wrap(~variable, ncol = 1, scales = "free_y")
+```
+
+![plot of chunk unnamed-chunk-22](figure/unnamed-chunk-22.png) 
+
+
+It seems like Konstantin improved on many fronts. His health increased, positive mood increased, cognition increased (perhaps a training effect), happiness, life satisfaction increased too. 
+Alertness took a bit of a slump in August and then got better again. 
+What's also interesting is that his stress level increased and his sleep duration increased (although it became more efficient too). 
+
+He also became significantly more physically active. One can see that steps, vigorous activity, moderate activity and calories burned are all highly correlated. They're all measured by the Bodymedia device. 
+
+Does someone have experiences with a Bodymedia?
 
 We can create bivariate plots to investigate the relationships between variables.
 
@@ -259,12 +401,13 @@ ggplot(mm, aes(Calories, Steps)) + geom_path(aes(colour = as.integer(row.names(m
     alpha = 0.5, na.rm = T)
 ```
 
-![plot of chunk unnamed-chunk-10](figure/unnamed-chunk-101.png) 
+![plot of chunk unnamed-chunk-23](figure/unnamed-chunk-231.png) 
 
 ```r
 ggplot(mm, aes(Stress, MoodInt)) + geom_path(aes(colour = as.integer(row.names(mm))), 
     alpha = 0.5, na.rm = T)
 ```
 
-![plot of chunk unnamed-chunk-10](figure/unnamed-chunk-102.png) 
+![plot of chunk unnamed-chunk-23](figure/unnamed-chunk-232.png) 
+
 

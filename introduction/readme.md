@@ -63,7 +63,7 @@ getwd()
 ```
 
 ```
-## [1] "/Users/briancrain/Documents/quantified_self/R_WORKSHOP/measured_me_rws"
+## [1] "/Users/briancrain/Documents/quantified_self/measured_me_rws/introduction"
 ```
 
 ```r
@@ -126,7 +126,7 @@ rnorm(1)
 ```
 
 ```
-## [1] 1.64
+## [1] -1.497
 ```
 
 
@@ -137,7 +137,7 @@ rnorm(2)
 ```
 
 ```
-## [1] -0.8876  0.7126
+## [1]  0.8175 -1.6486
 ```
 
 
@@ -149,7 +149,7 @@ mean(rnorm(2))
 ```
 
 ```
-## [1] 0.186
+## [1] 1.084
 ```
 
 
@@ -162,7 +162,7 @@ mean(v)
 ```
 
 ```
-## [1] 0.2639
+## [1] -0.3367
 ```
 
 
@@ -182,7 +182,7 @@ v
 ```
 
 ```
-## [1] -0.4937  0.5499
+## [1] -1.04769 -0.07321
 ```
 
 

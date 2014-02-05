@@ -54,15 +54,86 @@ summary(mm$Date)
 
 Great. Looks like we're ready to get started.
 
-
-## Exploratory Visualisations
+##ggplot2
 The excellent [GGplot2 library](http://docs.ggplot2.org/current/) implements the [Grammar of Graphics](http://www.springer.com/statistics/computational+statistics/book/978-0-387-24544-7).
-
-Note the pause between charts is intended for interactive use.
 
 ```{r  fig.width=7, fig.height=3, results =FALSE }
 library(ggplot2)
+```
 
+Here is a basic example of a plot created by ggplot:
+
+```{r}
+ggplot(data=mm, aes(x=Date, y=Health)) + geom_point()
+```
+We need to point out a few important things here:
+1. ggplot requires that the data comes as a data frame. That's the first variable we give the function.
+2. aes stands for aesthetics. It 'maps' the variables to different parts of the plot. Here we are saying we want the data on the x-axis and Health on the y-axis. 
+3. We then tell ggplot how we want that relationship to be expressed graphically. Here we are just showing the data points. 
+
+Let's try another type of plot.
+```{r}
+ggplot(data=mm, aes(x=Date, y=Health)) + geom_line()
+```
+
+That's a line plot. Point and line plots are two of the most important. It's still hard to make sense of the data though...
+
+```{r}
+ggplot(data=mm, aes(x=Date, y=Health)) + geom_smooth()
+```
+Now, this is interesting! Now ggplot creates some kind of smoothing regression. It looks a lot like Konstatin's health improved over the course of last summer. 
+
+We can also add several types of graphs. That's easy.
+
+```{r}
+ggplot(data=mm, aes(x=Date, y=Health)) + geom_point() + geom_smooth()
+```
+
+There is an outlier in late June. Let's adjust the y-axis a bit. 
+
+```{r}
+library(scales)
+ggplot(data=mm, aes(x=Date, y=Health)) + geom_point() + geom_smooth() + scale_y_continuous(limits=c(3,5))
+```
+
+Let's play a little bit more with ggplot here. We can make very big points and draw the line in red.
+```{r}
+ggplot(data=mm, aes(x=Date, y=Health)) + geom_point(size=4) + geom_smooth(col='red', size=3)
+```
+
+Let's roll this back and try something different. There is a cool library with different graphics 'themes'. You can check out different examples on github: https://github.com/jrnold/ggthemes
+We can try out a few. Here's one inspired by Edward Tufte.
+```{r}
+library(ggthemes)
+ggplot(data=mm, aes(x=Date, y=Health)) + geom_point() + geom_smooth() + theme_tufte()
+```
+
+Here is one called solarized.
+```{r}
+ggplot(data=mm, aes(x=Date, y=Health)) + geom_point() + geom_smooth() + theme_solarized()
+```
+
+A classic ugly one inspired by excel.
+```{r}
+ggplot(data=mm, aes(x=Date, y=Health)) + geom_point() + geom_smooth() + theme_excel()
+```
+
+Here is one inspired by the Economist.
+```{r}
+ggplot(data=mm, aes(x=Date, y=Health)) + geom_point() + geom_smooth() + theme_economist()
+```
+
+Let's add a title to this graph. As you can see the cool thing with ggplot is that you can just add additional things to the graph without having to change the previous work.
+```{r}
+ggplot(data=mm, aes(x=Date, y=Health)) + geom_point() + geom_smooth() + theme_economist() + ggtitle('Konstantin\'s Health')
+```
+
+But before we continue making nice graphs, let's take a step back and look at the data more systematically!
+
+## Exploratory Visualisations
+We can have a look at all the variable trends over the duration of the data.
+
+```{r  fig.width=7, fig.height=3, results =FALSE }
 for(var in colnames(mm)[2:ncol(mm)]) {
   print(qplot(Date, mm[,var], data=mm, geom="path", ylab=var))
   key <- readline("Press <return> for next plot")
@@ -81,8 +152,23 @@ head(mm.melted)
 ggplot(mm.melted, aes(Date, value)) + geom_path(na.rm=T) + geom_smooth(method="loess", na.rm=T) + facet_wrap(~ variable, ncol=1, scales="free_y")
 ```
 
+Let's redo these graphs but without the path. Just the smooth regression line. Perhaps we'll see more then. (We just get rid of the geom_path for that.)
+```{r fig.width=7, fig.height=14}
+ggplot(mm.melted, aes(Date, value)) + geom_smooth(method="loess", na.rm=T) + facet_wrap(~ variable, ncol=1, scales="free_y")
+
+```
+
+It seems like Konstantin improved on many fronts. His health increased, positive mood increased, cognition increased (perhaps a training effect), happiness, life satisfaction increased too. 
+Alertness took a bit of a slump in August and then got better again. 
+What's also interesting is that his stress level increased and his sleep duration increased (although it became more efficient too). 
+
+He also became significantly more physically active. One can see that steps, vigorous activity, moderate activity and calories burned are all highly correlated. They're all measured by the Bodymedia device. 
+
+Does someone have experiences with a Bodymedia?
+
 We can create bivariate plots to investigate the relationships between variables.
 ```{r}
 ggplot(mm, aes(Calories, Steps)) + geom_path(aes(colour=as.integer(row.names(mm))), alpha=0.5, na.rm=T)
 ggplot(mm, aes(Stress, MoodInt)) + geom_path(aes(colour=as.integer(row.names(mm))), alpha=0.5, na.rm=T)
 ```
+

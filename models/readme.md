@@ -467,20 +467,6 @@ plot(fitted.values(stress.lm.stepped), mm.nona$Stress)
 
 Comparing stress with the significant variables.
 
-```r
-mm.nona.stress <- melt(mm.nona, id.vars = "Stress")
-mm.nona.stress.stepped <- mm.nona.stress[mm.nona.steps$variable %in% attr(terms(stress.lm.stepped), 
-    "term.labels"), ]
-ggplot(mm.nona.stress.stepped, aes(Stress, value)) + geom_hex(bins = 10) + geom_smooth(method = "lm", 
-    na.rm = T) + facet_wrap(~variable, ncol = 1, scales = "free_y")
-```
 
 
-Some diagnostic tests on the model.
-
-```r
-plot(stress.lm.stepped)
-```
-
-![plot of chunk unnamed-chunk-11](figure/unnamed-chunk-111.png) ![plot of chunk unnamed-chunk-11](figure/unnamed-chunk-112.png) ![plot of chunk unnamed-chunk-11](figure/unnamed-chunk-113.png) ![plot of chunk unnamed-chunk-11](figure/unnamed-chunk-114.png) 
 
